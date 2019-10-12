@@ -4,8 +4,14 @@ var httpProxy = require('http-proxy');
 var apiProxy = httpProxy.createProxyServer();
 const port = 3000;
 var serverOne = 'http://localhost:3001',
-    ServerTwo = 'http://localhost:3002';
- 
+    serverTwo = 'http://localhost:3002';
+
+app.use(express.static('dist'));
+
+app.all("/", function(req, res) {
+  apiProxy.web(req, res, {target: serverOne});
+  apiProxy.web(req, res, {target: serverTwo});
+})
 app.all("/app1/*", function(req, res) {
     console.log('redirecting to Server1');
     apiProxy.web(req, res, {target: serverOne});
